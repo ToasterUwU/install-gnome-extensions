@@ -29,7 +29,7 @@ Since this is a simple shell script, it can be hot-linked (see Usage below) in o
 
 ### Why does this script require sudo access?
 
-Each GNOME Shell extension that has configurable settings makes use of dconf profiles as a config store. These settings can then be manipulated via the `gsettings` command to easily configure an extension from the command-line. Said dconf profiles are created by compiling all the `.xml`  schema files located in `/usr/share/glib-2.0/schemas/`. So for every extension that needs a dconf profile, we have to copy its `.xml` schema file into that directory and then run the `sudo glib-compile-schemas /usr/share/glib-2.0/schemas/` command to generate a compiled schemas file that'll be used by tools like `gsettings` and Dconf Editor. Doing that will require root access since the `/usr/share/glib-2.0/schemas` is non-writable by users by default. [Here's](https://github.com/cyfrost/install-gnome-extensions/blob/7ea5327e36c35e732c6c97887c08fe3596506727/install-gnome-extensions.sh#L174) the part of the code that checks for schemas and compiles them. Lastly, if an extension's schemas aren't compiled, you won't be able to use `gsettings` to directly manipulate it, there are workarounds [[here](https://askubuntu.com/questions/251712/how-can-i-install-a-gsettings-schema-without-root-privileges), and [here](https://askubuntu.com/a/1008879/538011)] though.
+Each GNOME Shell extension that has configurable settings makes use of dconf profiles as a config store. These settings can then be manipulated via the `gsettings` command to easily configure an extension from the command-line. Said dconf profiles are created by compiling all the `.xml`  schema files located in `/usr/share/glib-2.0/schemas/`. So for every extension that needs a dconf profile, we have to copy its `.xml` schema file into that directory and then run the `sudo glib-compile-schemas /usr/share/glib-2.0/schemas/` command to generate a compiled schemas file that'll be used by tools like `gsettings` and Dconf Editor. Doing that will require root access since the `/usr/share/glib-2.0/schemas` is non-writable by users by default. [Here's](https://github.com/ToasterUwU/install-gnome-extensions/blob/7ea5327e36c35e732c6c97887c08fe3596506727/install-gnome-extensions.sh#L174) the part of the code that checks for schemas and compiles them. Lastly, if an extension's schemas aren't compiled, you won't be able to use `gsettings` to directly manipulate it, there are workarounds [[here](https://askubuntu.com/questions/251712/how-can-i-install-a-gsettings-schema-without-root-privileges), and [here](https://askubuntu.com/a/1008879/538011)] though.
 
 **TL;DR**: To install Glib-2.0 schemas of the extension into non-writable (as `$USER`) directory (`/usr/share/glib-2.0/schemas`)
 
@@ -37,19 +37,19 @@ Each GNOME Shell extension that has configurable settings makes use of dconf pro
 
 ## Step 1: Check dependencies
 
-This script needs `curl, wget, jq, unzip, gnome-shell-extension-tool` (for API requests, JSON parsing, downloading, installing, and enabling/disabling extensions).
+This script needs `curl, wget, jq, gnome-shell-extension-tool` (for API requests, JSON parsing, downloading, installing, and enabling/disabling extensions).
 
 You probably already have them installed, if not, do:
 
-For Ubuntu: `$ sudo apt install -y curl wget jq unzip`
+For Ubuntu: `$ sudo apt install -y curl wget jq`
 
-For Fedora: `$ sudo dnf install -y curl wget jq unzip`
+For Fedora: `$ sudo dnf install -y curl wget jq`
 
 ## Step 2: Get this script
 
 You can always get the latest version of this script using a single-command:
 
-`rm -f ./install-gnome-extensions.sh; wget -N -q "https://raw.githubusercontent.com/cyfrost/install-gnome-extensions/master/install-gnome-extensions.sh" -O ./install-gnome-extensions.sh && chmod +x install-gnome-extensions.sh && ./install-gnome-extensions.sh`
+`rm -f ./install-gnome-extensions.sh; wget -N -q "https://raw.githubusercontent.com/ToasterUwU/install-gnome-extensions/master/install-gnome-extensions.sh" -O ./install-gnome-extensions.sh && chmod +x install-gnome-extensions.sh && ./install-gnome-extensions.sh`
 
 ## Step 3: Pick the extensions you want installed
 
@@ -126,14 +126,14 @@ Find and enable extensions from GNOME Tweak Tool app > "Extensions" page.
 1. Maybe add flags to remove/delete extensions on user's choice.
 2. Maybe consult the distro's package manager (APT, DNF) if an extension the user is trying to install is already provided/available in the repos.
 3. Provide a script function to check if an extension is correctly installed and enabled (this can help in deciding what extensions to update/overwrite/ignore).
-5. Add cli options to list info (name, id, url etc) of installed extensions (partially added with [51e3e9d](https://github.com/cyfrost/install-gnome-extensions/commit/51e3e9da4b9a208a01fd4f95440a0577290e3fbe)).
+5. Add cli options to list info (name, id, url etc) of installed extensions (partially added with [51e3e9d](https://github.com/ToasterUwU/install-gnome-extensions/commit/51e3e9da4b9a208a01fd4f95440a0577290e3fbe)).
 6. Add support to install extensions system-wide. currently extensions can only be installed per-user.
 7. Add support to update all installed extensions to latest available versions (tricky: system-wide? user-specific? from repos?)
 
 ## Contributing
 
-Please [Create an Issue](https://github.com/cyfrost/install-gnome-extensions/issues) for any suggestions, bug report you may have with this script. Or, better yet, [Send a Pull Request](https://github.com/cyfrost/install-gnome-extensions/pulls) if you have the fixes ready.
+Please [Create an Issue](https://github.com/ToasterUwU/install-gnome-extensions/issues) for any suggestions, bug report you may have with this script. Or, better yet, [Send a Pull Request](https://github.com/ToasterUwU/install-gnome-extensions/pulls) if you have the fixes ready.
 
 ## License
 
-[MIT](https://github.com/cyfrost/install-gnome-extensions/blob/master/LICENSE)
+[MIT](https://github.com/ToasterUwU/install-gnome-extensions/blob/master/LICENSE)
