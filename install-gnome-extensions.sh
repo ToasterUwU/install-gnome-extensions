@@ -32,23 +32,18 @@ error_text=$(tput setaf 1)
 status_text_yellow=$(tput setaf 3)
 
 # Bail immediately if running as root.
-function CheckIfRunningAsRoot() {
-    if [ "$(id -u)" = 0 ]; then
-        printf "
-${error_text}Running this script as root is discouraged and won't work since it needs user directories to operate. Retry as normal user.
+# function CheckIfRunningAsRoot() {
+#     if [ "$(id -u)" = 0 ]; then
+#         printf "
+# ${error_text}There was a error message here, but using sudo works just fine.. so i will comment this part out
 
-Note: If you're trying to install extensions for another user on this computer, try 'su <user_account_name>' and proceed.
+# ${normal_text}"
 
-Abort.
+#         exit 1
+#     fi
+# }
 
-${normal_text}"
-
-        exit 1
-    fi
-}
-
-# Bail immediately if running as root.
-CheckIfRunningAsRoot
+# CheckIfRunningAsRoot
 
 # Trap SIGINT and SIGTERM.
 function _term() {
@@ -72,7 +67,7 @@ function CheckDependencies() {
         }
     done
     [[ $deps -ne 1 ]] || {
-        echo -en "${error_text}\n\nOne or more dependencies is unavailable. Please make sure the above commands are available and re-run this script.\n\n${status_text_yellow}For Ubuntu and similar distros, try: $deps_install_apt\n\nFor Fedora and similar distros, try: $deps_install_dnf\n\n${normal_text}"
+        echo -en "${error_text}\n\nOne or more dependencies is unavailable. Please make sure the above commands are available and re-run this script.\n\n${status_text_yellow}For Ubuntu and other Debian based Distros, try: $deps_install_apt\n\nFor Fedora and Fedora based Distros, try: $deps_install_dnf\n\n${normal_text}"
         exit 1
     }
 }
@@ -112,7 +107,7 @@ function IsEnvGNOME() {
 
 function install_extension() {
     archive_file_name="$1"
-    gnome-extensions install "$archive_file_name" >/dev/null 2>&1
+    gnome-extensions install "$archive_file_name" -f >/dev/null 2>&1
 }
 
 function enable_extension() {
@@ -199,12 +194,9 @@ Usage: ./install-gnome-extensions.sh [options] <extension_ids> | [links_file]
 
 Options:
     -e, --enable        Enable extension after installing it.
-    -u, --update        Updates existing extensions to latest available versions.
-    -o, --overwrite     Overwrites existing extensions.
     -l. --list          Lists the UUIDs of installed extensions.
     -f, --file          Specify a file containing extension links to install.
     -h, --help          Display this help message.
-
 
 Example usages:
 ---------------
