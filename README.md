@@ -2,13 +2,13 @@
 
 ## What
 
-A simple shell script that can carefully-yet-automagically download, install, and enable all the [GNOME Shell Extensions](https://extensions.gnome.org/) on-the-fly!
+A simple shell script that can carefully yet automagically download, install, and enable all the [GNOME Shell Extensions](https://extensions.gnome.org/) on-the-fly!
 
 ## Why
 
 The [GNOME Shell Extensions website](https://extensions.gnome.org/) is a massive catalog of extensions for the GNOME desktop.
 
-Installing a few extensions by-hand can become tedious (especially if it's a repetitive task --imaging few PCs).
+Installing a few extensions by-hand can become tedious (especially if it's a repetitive task like imaging multiple PCs).
 
 This script automates the whole process with an easy-to-use setup.
 
@@ -22,22 +22,16 @@ Since this is a simple shell script, it can be hot-linked (see Usage below) in o
 
 ### A short overview of this script's inner-workings
 
-1. For all purposes (metadata retreival, installation, and status), this script uses the `extension_id` unique to each extension in the marketplace (in case a file is supplied with links, the id is parsed out using a simple regex).
+1. For all purposes (metadata retrieval, installation, and status), this script uses the `extension_id` unique to each extension in the marketplace (in case a file is supplied with links, the id is parsed out using a simple regex).
 2. Each extension has a compatibility set to a particular GNOME Shell version, this script parses the extension metadata to correctly match the user's existing desktop shell version with the extension about to be installed. Should validation fail, skip install and notify user, else install without issues. Installing an extension without matching shell version will obviously cripple your desktop.
-3. This script must be run as your user and not root because it'll only ever install extensions to `$XDG_CONFIG_HOME/.config/gnome-shell/extensions/`. This may be seen as a limitation for now, but plan to support global install of extensions is in the backlog.
-4. For enabling/disabling extensions, it uses the `gnome-shell-extension-tool` available with every GNOME desktop bundle.
-
-### Why does this script require sudo access?
-
-Each GNOME Shell extension that has configurable settings makes use of dconf profiles as a config store. These settings can then be manipulated via the `gsettings` command to easily configure an extension from the command-line. Said dconf profiles are created by compiling all the `.xml`  schema files located in `/usr/share/glib-2.0/schemas/`. So for every extension that needs a dconf profile, we have to copy its `.xml` schema file into that directory and then run the `sudo glib-compile-schemas /usr/share/glib-2.0/schemas/` command to generate a compiled schemas file that'll be used by tools like `gsettings` and Dconf Editor. Doing that will require root access since the `/usr/share/glib-2.0/schemas` is non-writable by users by default. [Here's](https://github.com/ToasterUwU/install-gnome-extensions/blob/7ea5327e36c35e732c6c97887c08fe3596506727/install-gnome-extensions.sh#L174) the part of the code that checks for schemas and compiles them. Lastly, if an extension's schemas aren't compiled, you won't be able to use `gsettings` to directly manipulate it, there are workarounds [[here](https://askubuntu.com/questions/251712/how-can-i-install-a-gsettings-schema-without-root-privileges), and [here](https://askubuntu.com/a/1008879/538011)] though.
-
-**TL;DR**: To install Glib-2.0 schemas of the extension into non-writable (as `$USER`) directory (`/usr/share/glib-2.0/schemas`)
+3. This script must be run as your user and not root because it'll only ever install extensions to `~/.config/gnome-shell/extensions/`. Using sudo still works tho.
+4. For installing the downloaded extension and enabling/disabling extensions, it uses the `gnome-extensions` tool available with every GNOME desktop bundle.
 
 # Usage
 
 ## Step 1: Check dependencies
 
-This script needs `curl, wget, jq, gnome-shell-extension-tool` (for API requests, JSON parsing, downloading, installing, and enabling/disabling extensions).
+This script needs `curl, wget, jq, gnome-extensions` (for API requests, JSON parsing, downloading, installing, and enabling/disabling extensions).
 
 You probably already have them installed, if not, do:
 
@@ -47,9 +41,9 @@ For Fedora: `$ sudo dnf install -y curl wget jq`
 
 ## Step 2: Get this script
 
-You can always get the latest version of this script using a single-command:
+You can always get the latest version of this script using a single command:
 
-`rm -f ./install-gnome-extensions.sh; wget -N -q "https://raw.githubusercontent.com/ToasterUwU/install-gnome-extensions/master/install-gnome-extensions.sh" -O ./install-gnome-extensions.sh && chmod +x install-gnome-extensions.sh && ./install-gnome-extensions.sh`
+`rm -f ./install-gnome-extensions.sh; wget -N -q "https://raw.githubusercontent.com/ToasterUwU/install-gnome-extensions/master/install-gnome-extensions.sh" -O ./install-gnome-extensions.sh && chmod +x install-gnome-extensions.sh`
 
 ## Step 3: Pick the extensions you want installed
 
@@ -94,7 +88,7 @@ Now, run the following command to download and install them:
 
 For Example:
 
-`$ ./install-gnome-extensions.sh --enable 8 750 1156` 
+`$ ./install-gnome-extensions.sh --enable 8 750 1156`
 
 This example will install extensions with IDs [8](https://extensions.gnome.org/extension/8/places-status-indicator/), [750](https://extensions.gnome.org/extension/750/openweather/), [1156](https://extensions.gnome.org/extension/1156/gsnow/) and enable them.
 
@@ -119,16 +113,7 @@ Find and enable extensions from GNOME Tweak Tool app > "Extensions" page.
 
 1. As long as you have a GNOME desktop installed on the machine, you can use this script anytime and anywhere, even from KDE, XFCE etc (no graphical front-end required at all). The only hard requirements this script has is, a terminal environment and GNOME desktop installed.
 
-2. No session reload necessary: This script internally makes use of the well-made `gnome-shell-extension-tool` binary to enable/disable extensions on-the-fly.
-
-### TODO
-
-1. Maybe add flags to remove/delete extensions on user's choice.
-2. Maybe consult the distro's package manager (APT, DNF) if an extension the user is trying to install is already provided/available in the repos.
-3. Provide a script function to check if an extension is correctly installed and enabled (this can help in deciding what extensions to update/overwrite/ignore).
-5. Add cli options to list info (name, id, url etc) of installed extensions (partially added with [51e3e9d](https://github.com/ToasterUwU/install-gnome-extensions/commit/51e3e9da4b9a208a01fd4f95440a0577290e3fbe)).
-6. Add support to install extensions system-wide. currently extensions can only be installed per-user.
-7. Add support to update all installed extensions to latest available versions (tricky: system-wide? user-specific? from repos?)
+2. No session reload necessary: This script internally makes use of the well-made `gnome-extensions` binary to install and enable/disable extensions on-the-fly.
 
 ## Contributing
 
