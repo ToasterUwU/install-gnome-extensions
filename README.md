@@ -1,3 +1,5 @@
+**DISCLAIMER:** I forked this project and fixed it with no regard for all possible usecases. I wanted this to work for my specific case. So if you find something is broken please make an Issue or a PR. I will look at everything, promised.
+
 # Install GNOME Shell Extensions Script
 
 ## What
